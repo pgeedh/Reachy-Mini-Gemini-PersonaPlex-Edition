@@ -6,15 +6,15 @@ mediapipe
 numpy
 python-multipart
 websockets
-# Vision
 fer
 tensorflow
-# AI / Brain (Optional, heavy)
 transformers
 torch
 accelerate
 scipy
-# Audio
 SpeechRecognition
 gTTS
 pyaudio
+google-genai
+python-dotenv
+pillow
