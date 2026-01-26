@@ -1,6 +1,6 @@
 # Reachy Empath ❤️🤖
 
-> **The first emotionally intelligent companion for Reachy Mini.**
+> **The emotionally intelligent companion for Reachy Mini using Gemini Robotics-ER 1.5 VLA.**
 
 Reachy Empath is a Human-Robot Interaction (HRI) framework that gives the [Reachy Mini](https://www.pollen-robotics.com/reachy-mini/) robot a "soul." By combining computer vision, emotional resonance, and the cutting-edge **Gemini Robotics-ER 1.5 VLA**, Reachy can now see, feel, and respond to you with genuine empathy.
 
