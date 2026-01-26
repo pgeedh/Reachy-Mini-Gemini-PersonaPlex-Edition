@@ -47,11 +47,14 @@ export default function Home() {
 
   const getEmotionColor = (emo: string) => {
     switch (emo) {
-      case "happy": return "bg-yellow-500 shadow-yellow-500/50";
-      case "sad": return "bg-blue-500 shadow-blue-500/50";
+      case "happy": return "bg-yellow-400 shadow-yellow-500/50";
+      case "sad": return "bg-blue-400 shadow-blue-500/50";
       case "angry": return "bg-red-500 shadow-red-500/50";
-      case "neutral": return "bg-gray-500 shadow-gray-500/50";
-      default: return "bg-purple-500 shadow-purple-500/50";
+      case "surprise": return "bg-orange-400 shadow-orange-500/50";
+      case "fear": return "bg-purple-400 shadow-purple-500/50";
+      case "disgust": return "bg-green-400 shadow-green-500/50";
+      case "neutral": return "bg-gray-400 shadow-gray-500/50";
+      default: return "bg-white shadow-white/50";
     }
   };
 
