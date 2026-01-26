@@ -1,0 +1,14 @@
+{
+    "git.ignoreLimitWarning": true,
+    "files.exclude": {
+        "**/venv": true,
+        "**/node_modules": true,
+        "**/.next": true
+    },
+    "python.analysis.exclude": [
+        "**/venv",
+        "**/node_modules",
+        "**/.next"
+    ],
+    "css.lint.unknownAtRules": "ignore"
+}
