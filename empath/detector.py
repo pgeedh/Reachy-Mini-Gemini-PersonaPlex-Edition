@@ -1,5 +1,8 @@
 import cv2
-from fer import FER
+try:
+    from fer import FER
+except ImportError:
+    from fer.fer import FER
 import numpy as np
 
 class EmpathEye:
