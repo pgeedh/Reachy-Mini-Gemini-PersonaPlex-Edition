@@ -1,0 +1,15 @@
+gemini-robotics-client
+google-genai
+python-dotenv
+opencv-python
+numpy
+mediapipe
+speechrecognition
+pyaudio
+huggingface_hub
+openai
+gTTS
+fastapi
+uvicorn
+pillow
+reachy-mini

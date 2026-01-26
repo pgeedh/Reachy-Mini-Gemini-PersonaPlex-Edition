@@ -42,37 +42,62 @@ eye = EmpathEye()
 voice = EmpathVoice()
 brain = None 
 
+# Engagement timer to allow conversation after initial wake word
+# We start with a high value to allow immediate engagement on first run
+last_engagement_time = time.time() 
+
 def on_hear_text(text):
-    clean_text = text.lower()
-    wake_words = ["hello reachy", "jarvis", "tadashi", "hey reachy"]
+    global last_engagement_time
+    raw_text = text.lower().strip()
     
-    # Check for activation
-    is_active = any(w in clean_text for w in wake_words)
+    if len(raw_text) < 2: return # Ignore noise
     
+    wake_words = [
+        "hello reachy", "hey reachy", "hi reachy", "reachy", 
+        "jarvis", "tadashi", "hey richie", "hello ritchie",
+        "hey ricky", "hey rici", "hey reach", "hey bridgey",
+        "hello", "hi", "hey", "talk back", "can you hear", "can you talk"
+    ]
+    
+    # Priority Activation (Wake words)
+    is_active = any(w in raw_text for w in wake_words)
+    
+    # Secondary Activation (Already Engaged or Face Detected)
+    if not is_active:
+        # Extended conversation window (5 minutes) to allow follow-up questions
+        if time.time() - last_engagement_time < 300:
+            is_active = True
+            print(f"🔄 [Main] Session Active (Time remaining: {300 - (time.time() - last_engagement_time):.0f}s)")
+        # If a face is clearly seen (not neutral/passive)
+        elif state.current_emotion != "neutral":
+            is_active = True
+
     if is_active:
-        print(f"👂 Reachy Activated via text: {text}")
+        print(f"🚀 [Main] ACTIVATED: '{raw_text}'")
+        last_engagement_time = time.time() # Update session timer
+        
         if brain:
-            # Wake up gesture
+            # Physical acknowledgment
             robot.trigger_gesture("agree") 
-            time.sleep(0.5)
-            robot.trigger_gesture("thinking")
             
-            frame = robot.get_frame()
-            response = brain.process_query(text, state.current_emotion, frame=frame)
-            
-            # Additional response expression
-            if "haha" in response.lower() or "lol" in response.lower() or "😊" in response:
-                robot.trigger_gesture("giggles")
-            elif "yes" in response.lower() or "sure" in response.lower():
-                robot.trigger_gesture("agree")
-            elif "sad" in response.lower() or "sorry" in response.lower():
-                robot.trigger_gesture("bashful")
+            def process_and_reply():
+                frame = robot.get_frame() # Will be None if camera is off
+                response = brain.process_query(raw_text, state.current_emotion, frame=frame)
                 
-            voice.speak(response)
+                # Persona expressions
+                lr = response.lower()
+                if any(x in lr for x in ["haha", "lol", "😊", "funny", "excellent"]):
+                    robot.trigger_gesture("giggles")
+                elif any(x in lr for x in ["sad", "sorry", "unfortunate", "bad"]):
+                    robot.trigger_gesture("bashful")
+                else:
+                    robot.trigger_gesture("agree")
+                
+                voice.speak(response)
+                
+            threading.Thread(target=process_and_reply, daemon=True).start()
     else:
-        # Passive listening - only respond if it seems like it's for me or just ignore
-        # If no wake word, we might still process if it's a conversation
-        pass
+        print(f"👂 [Main] Passive speech ignored (Wait for wake word): '{raw_text}'")
 
 ear = EmpathEar(callback=on_hear_text)
 
@@ -89,8 +114,8 @@ threading.Thread(target=init_brain).start()
 from contextlib import asynccontextmanager
 
 def connect_robot_bg():
-    # Force use of laptop camera for vision as requested
-    if robot.connect(use_local_camera=True):
+    # Camera DISABLED as requested
+    if robot.connect(use_local_camera=False):
         state.is_connected = True
 
 @asynccontextmanager
@@ -118,10 +143,12 @@ def generate_frames():
             time.sleep(0.1)
             continue
             
-        # Analyze Emotion
+        # Analyze Emotion & Features
         analysis, annotated_frame = eye.analyze_frame(frame)
         
         state.current_emotion = analysis["dominant_emotion"]
+        # Save features for brain
+        state.visual_features = analysis.get("features", {})
         
         # Mirroring Logic (Visual Resonance)
         if analysis["face_detected"]:
@@ -157,7 +184,8 @@ def get_status():
         "mode": state.mode,
         "connected": state.is_connected,
         "emotion": state.current_emotion,
-        "brain_online": brain is not None and not brain.offline
+        "brain_online": brain is not None and not brain.offline,
+        "features": getattr(state, "visual_features", {})
     }
 
 @app.post("/chat")
@@ -170,7 +198,9 @@ async def chat(payload: dict):
         return {"response": "My brain is still waking up..."}
     
     frame = robot.get_frame()
-    response = brain.process_query(user_text, state.current_emotion, frame=frame)
+    # Pass visual features if available
+    features = getattr(state, "visual_features", {})
+    response = brain.process_query(user_text, state.current_emotion, frame=frame, visual_notes=features)
     voice.speak(response)
     
     return {"response": response}

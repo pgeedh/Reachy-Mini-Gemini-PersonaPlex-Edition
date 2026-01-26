@@ -1,52 +1,88 @@
-# Reachy Empath ❤️🤖
+# 🦖 Reachy-Mini: PersonaPlex Edition
 
-> **The emotionally intelligent companion for Reachy Mini using Gemini Robotics-ER 1.5 VLA.**
-
-Reachy Empath is a Human-Robot Interaction (HRI) framework that gives the [Reachy Mini](https://www.pollen-robotics.com/reachy-mini/) robot a "soul." By combining computer vision, emotional resonance, and the cutting-edge **Gemini Robotics-ER 1.5 VLA**, Reachy can now see, feel, and respond to you with genuine empathy.
+Reachy-Mini is an interactive AI companion system built on the **PersonaPlex** philosophy of warm, empathetic, and kind robot-human interaction. This repository provides a full-stack integration of **Gemini 1.5 Robotics VLA** for physical-visual reasoning and **NVIDIA PersonaPlex-7B** for high-fidelity conversational empathy.
 
 ---
 
-## ✨ Key Features
+## 🌟 Key Features
 
-- **🧠 Agentic Brain (Gemini Robotics-ER 1.5):** Uses Google DeepMind's newest Robotics model for advanced reasoning and spatial awareness.
-- **👁️ Multimodal Vision:** Reachy "sees" you through his camera and understands context beyond just text.
-- **❤️ Emotional Resonance:** Real-time facial expression tracking allows Reachy to mirror your mood.
-- **🗣️ Natural Voice interaction:** Seamless STT (Speech-to-Text) and TTS (Text-to-Speech) for fluid conversation.
-- **🎭 Expressive Gestures:** Physical movement that matches the conversation's emotional tone (Happy, Sad, Angry, Surprised, Confused, Excited, Bashful).
+*   **Dual-Tier Intelligence**:
+    *   **Primary (Gemini VLA)**: Real-time visual context awareness (detects tabletop items like T-Rex toys, fruits, etc.) and sophisticated reasoning.
+    *   **Fallback (NVIDIA PersonaPlex)**: High-empathy conversation engine that maintains a persistent "kind" character even when global APIs are limited.
+*   **PersonaPlex Physicality**: 15+ scripted physical expressions (Thinking tilts, Playful shimmies, Shy peeks) that mirror conversational sentiment.
+*   **Zero-Lag Interaction**: High-speed processing loops for vision, hearing, and actuation.
+*   **Voice-First Interface**: Multi-variant wake-word activation ("Hello Reachy", "Jarvis", "Tadashi").
+
+---
+
+## 🛠 Prerequisites
+
+*   **Hardware**: Reachy-Mini Robot (or MuJoCo Simulation instance).
+*   **OS**: macOS (recommended for high-fidelity `afplay` voice) or Linux.
+*   **Python**: 3.11+
+*   **API Keys**:
+    *   `GEMINI_API_KEY`: Google AI Studio.
+    *   `HF_TOKEN`: Hugging Face token with access to `nvidia/personaplex-7b-v1`.
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Requirements
-- Python 3.10+
-- A Google Gemini API Key in `.env`
+### 1. Installation
+Clone the repository and install dependencies:
 
-### 2. Launch Everything (One Command)
-Run the following to start MuJoCo, the AI Backend, and the Dashboard all at once:
 ```bash
-chmod +x super_launch.sh
+git clone https://github.com/pgeedh/Reachy-Mini.git
+cd Reachy-Mini
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Configuration
+Create a `.env` file in the root directory:
+
+```env
+GEMINI_API_KEY=your_gemini_key
+HF_TOKEN=your_huggingface_token
+```
+
+### 3. Launching the System
+Use the professional Super-Launch script to start both the simulation and the AI brain:
+
+```bash
 ./super_launch.sh
 ```
 
 ---
 
-## 👁️ Simulation Scene
-The MuJoCo simulation now includes:
-- **Stylized Green T-Rex** (Reachy's favorite toy).
-- **Interactive fruits** (Orange, Apple, Croissant) centered on the table.
-- **In-sim Monitor:** A virtual screen that displays your webcam feed directly to Reachy.
+## 🧠 Brain Architecture (PersonaPlex)
+
+Reachy's brain is designed to never break character. 
+
+1.  **Vision Phase**: Reachy captures a frame from his eyes and analyzes face proximity.
+2.  **Listening Phase**: Reachy uses Google Speech-to-Text with phonetic wake-word matching to catch commands even in noisy environments.
+3.  **Synthesis Phase**: Reachy merges visual descriptors ("I see your green T-Rex!") with user text.
+4.  **Fallback Phase**: If the Gemini API hits a quota limit, the `InferenceClient` immediately switches to **nvidia/personaplex-7b-v1** to ensure the conversation stays warm and fluid.
 
 ---
 
-## 🛠️ Tech Stack
+## 📜 Licenses
 
-- **Robot Hardware:** Reachy Mini (Pollen Robotics)
-- **AI Core:** Google Gemini Robotics-ER 1.5 (VLA)
-- **Vision:** OpenCV, FER (Facial Expression Recognition), MediaPipe
-- **Audio:** gTTS, SpeechRecognition
-- **Framework:** FastAPI (Backend) & Next.js (Dashboard)
+*   **Software**: MIT License
+*   **AI Model (PersonaPlex)**: [NVIDIA Open Model License](NVIDIA_LICENSE.md)
 
 ---
 
-**Developed with ❤️ by the Neuracore Team.**
+## 🤖 Manual Control & API
+
+The system exposes a FastAPI backend at `http://localhost:8080`:
+
+*   `GET /status`: Check connection and brain health.
+*   `GET /video_feed`: Real-time annotated stream of what Reachy sees.
+*   `POST /chat`: Manually send text inputs to the brain.
+
+---
+
+*“Hello Reachy. I am Tadashi Hamada.”*
+Designed for connection, one nod at a time.
