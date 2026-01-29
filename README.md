@@ -84,5 +84,5 @@ The system exposes a FastAPI backend at `http://localhost:8080`:
 
 ---
 
-*“Hello Reachy. I am Tadashi Hamada.”*
+*“Hardcoded by Pruthvi Geedh”*
 Designed for connection, one nod at a time.
