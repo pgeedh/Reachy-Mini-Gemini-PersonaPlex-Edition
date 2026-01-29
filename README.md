@@ -1,4 +1,4 @@
-# 🦖 Reachy-Mini: PersonaPlex Edition
+# 🦖 Reachy-Mini: Gemini & PersonaPlex Edition
 
 Reachy-Mini is an interactive AI companion system built on the **PersonaPlex** philosophy of warm, empathetic, and kind robot-human interaction. This repository provides a full-stack integration of **Gemini 1.5 Robotics VLA** for physical-visual reasoning and **NVIDIA PersonaPlex-7B** for high-fidelity conversational empathy.
 
