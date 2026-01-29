@@ -138,3 +138,59 @@ class RobotController:
             self.mini.goto_target(head=create_head_pose(), duration=0.2)
         finally:
             self._is_moving = False
+
+    def _sad(self):
+        self._is_moving = True
+        try:
+            if not self.mini: return
+            self.mini.goto_target(
+                head=create_head_pose(pitch=25), # Look down
+                antennas=np.deg2rad([130, -130]), # Droopy antennas
+                duration=1.0
+            )
+            time.sleep(1.5)
+            self.mini.goto_target(head=create_head_pose(), antennas=np.deg2rad([0,0]), duration=1.0)
+        finally:
+            self._is_moving = False
+
+    def _angry(self):
+        self._is_moving = True
+        try:
+            if not self.mini: return
+            # Fast, sharp movement
+            self.mini.goto_target(
+                head=create_head_pose(pitch=10, z=5), 
+                antennas=np.deg2rad([-20, 20]), # Forward/aggressive
+                duration=0.3
+            )
+            time.sleep(1.0)
+            self.mini.goto_target(head=create_head_pose(), antennas=np.deg2rad([0,0]), duration=0.8)
+        finally:
+            self._is_moving = False
+
+    def _surprised(self):
+        self._is_moving = True
+        try:
+            if not self.mini: return
+            self.mini.goto_target(
+                head=create_head_pose(pitch=-15, r=10), # Backwards/Up
+                antennas=np.deg2rad([60, -60]), # Wide open
+                duration=0.2
+            )
+            time.sleep(1.0)
+            self.mini.goto_target(head=create_head_pose(), antennas=np.deg2rad([0,0]), duration=0.6)
+        finally:
+            self._is_moving = False
+
+    def _confused(self):
+        self._is_moving = True
+        try:
+            if not self.mini: return
+            # Head tilt left then right
+            self.mini.goto_target(head=create_head_pose(roll=15, pitch=-5), antennas=np.deg2rad([30, 0]), duration=0.5)
+            time.sleep(0.5)
+            self.mini.goto_target(head=create_head_pose(roll=-15, pitch=-5), antennas=np.deg2rad([0, -30]), duration=0.5)
+            time.sleep(0.5)
+            self.mini.goto_target(head=create_head_pose(), antennas=np.deg2rad([0,0]), duration=0.5)
+        finally:
+            self._is_moving = False
